@@ -1,6 +1,6 @@
 VERSION ?= 0.4.0
-RUST_VERSION ?= 1.51.0
-REPO ?= softprops/lambda-rust
+RUST_VERSION ?= 1.52.1
+REPO ?= juchiast/lambda-rust
 TAG ?= "$(REPO):$(VERSION)-rust-$(RUST_VERSION)"
 
 publish: build
