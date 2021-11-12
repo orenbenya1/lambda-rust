@@ -1,5 +1,5 @@
-VERSION ?= 0.4.0
-RUST_VERSION ?= 1.55.0
+VERSION ?= 0.5.0
+RUST_VERSION ?= 1.56.1
 REPO ?= juchiast/lambda-rust
 TAG ?= "$(REPO):$(VERSION)-rust-$(RUST_VERSION)"
 
