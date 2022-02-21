@@ -17,11 +17,8 @@ export RUSTUP_HOME="/rustup"
 
 # cargo uses different names for target
 # of its build profiles
-if [[ "${PROFILE}" == "release" ]]; then
-    TARGET_PROFILE="${PROFILE}"
-else
-    TARGET_PROFILE="debug"
-fi
+TARGET_PROFILE="${PROFILE}"
+
 export CARGO_TARGET_DIR=$PWD/target/lambda
 (
     if [[ $# -gt 0 ]]; then
@@ -41,10 +38,10 @@ export CARGO_TARGET_DIR=$PWD/target/lambda
 
     # cargo only supports --release flag for release
     # profiles. dev is implicit
-    if [ "${PROFILE}" == "release" ]; then
-        cargo build ${CARGO_BIN_ARG} ${CARGO_FLAGS:-} --${PROFILE}
-    else
+    if [[ "${PROFILE}" == "debug" ]]; then
         cargo build ${CARGO_BIN_ARG} ${CARGO_FLAGS:-}
+    else
+        cargo build ${CARGO_BIN_ARG} ${CARGO_FLAGS:-} --profile ${PROFILE}
     fi
 
     if test -f "$HOOKS_DIR/$BUILD_HOOK"; then
@@ -57,7 +54,7 @@ export CARGO_TARGET_DIR=$PWD/target/lambda
 function package() {
     file="$1"
     OUTPUT_FOLDER="output/${file}"
-    if [[ "${PROFILE}" == "release" ]] && [[ -z "${DEBUGINFO}" ]]; then
+    if [[ "${PROFILE}" != "debug" ]] && [[ -z "${DEBUGINFO}" ]]; then
         objcopy --only-keep-debug "$file" "$file.debug"
         objcopy --strip-debug --strip-unneeded "$file"
         objcopy --add-gnu-debuglink="$file.debug" "$file"
