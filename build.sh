@@ -78,11 +78,11 @@ function package() {
 cd "${CARGO_TARGET_DIR}/${TARGET_PROFILE}"
 (
     . $CARGO_HOME/env
+    . `which env_parallel.bash`
     if [ -z "$BIN" ]; then
-        IFS=$'\n'
-        for executable in $(cargo metadata --no-deps --format-version=1 | jq -r '.packages[] | .targets[] | select(.kind[] | contains("bin")) | .name'); do
-          package "$executable"
-        done
+        cargo metadata --no-deps --format-version=1 | \
+            jq -r '.packages[] | .targets[] | select(.kind[] | contains("bin")) | .name' | \
+            env_parallel package
     else
         package "$BIN"
     fi
